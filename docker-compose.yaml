@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  compiler:
+    container_name: compiler_ubuntu
+    build:
+      context: .
+      dockerfile: DockerFile
+    user: root
+    ports:
+      - "3000:80"
+    tty: true
+    stdin_open: true
+    volumes:
+      -project_dir: /app
+    command: ["uvicorn", "main:app", "--reload"]

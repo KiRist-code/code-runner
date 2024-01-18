@@ -1,0 +1,17 @@
+FROM ubuntu:latest
+
+ARG DEBIAN_FRONTEND=interactive
+
+RUN \
+    apt update -y \
+    apt install software-properties-common -y \
+    apt upgrade -y \
+    apt install -y git
+
+WORKDIR /compile_server
+
+COPY ./app ./
+
+EXPOSE 8000
+
+# python@3.10이 이미 ubuntu@22.04에 내포되어 있음.
