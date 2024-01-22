@@ -2,16 +2,15 @@ FROM ubuntu:latest
 
 ARG DEBIAN_FRONTEND=interactive
 
-RUN \
-    apt update -y \
-    apt install software-properties-common -y \
-    apt upgrade -y \
-    apt install -y git
-
 WORKDIR /compile_server
 
-COPY ./app ./
+COPY ./app ./app
 
-EXPOSE 8000
+RUN \
+    apt update -y \
+    && apt install software-properties-common -y \
+    && apt upgrade -y \
+    && apt install -y git python3-pip \
+    && pip3 install -r app/requirements.txt
 
 # python@3.10이 이미 ubuntu@22.04에 내포되어 있음.

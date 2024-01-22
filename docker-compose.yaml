@@ -8,9 +8,9 @@ services:
       dockerfile: DockerFile
     user: root
     ports:
-      - "3000:80"
+      - "8000:8000"
     tty: true
     stdin_open: true
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
-      -project_dir: /app
-    command: ["uvicorn", "main:app", "--reload"]
+      - ./app:/app
