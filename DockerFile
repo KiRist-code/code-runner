@@ -11,6 +11,6 @@ RUN \
     && apt install software-properties-common -y \
     && apt upgrade -y \
     && apt install -y git python3-pip \
-    && pip3 install -r app/requirements.txt
+    && pip3 install -r app/requirements.txt \
 
 # python@3.10이 이미 ubuntu@22.04에 내포되어 있음.
