@@ -38,7 +38,7 @@ def root():
 
 @app.post('/compile') #request body는 Code(BaseModel) 참고
 def compile_code(code:Code):
-    if code.lang == 'python':
+    if code.lang == 'python': #Python 코드 컴파일
         timestamp = int(time.clock_gettime(1)) # make Timestamp
         file_name = str(timestamp) + "_py" +'.py'
         with open(file=file_name, mode="w") as f:
@@ -46,11 +46,27 @@ def compile_code(code:Code):
         command_line = 'python3 ' + file_name #make cmd line to run python script
         args = shlex.split(command_line)
         input_args = code.input.splitline() #split input str as line
-        with subprocess.Popen(args, stdin=subprocess.PIPE,  stdout=subprocess.PIPE, stderr=subprocess.PIPE) as proc: #open shell & run code
-            output : list = [] #make list for stdout
-            for x in input_args:
-                output.append(proc.communicate(input=x)) #PIPE communicate
-            return {"output": output} #return stdout
+
+    if code.lang == 'Java': #Java 코드 컴파일
+        timestamp = int(time.clock_gettime(1)) # make Timestamp
+        file_name = str(timestamp) + "_java" +'.java'
+        with open(file=file_name, mode="w") as f:
+            f.write(code) # write code to file
+        compile_command_line = 'javac -encoding UTF-8 ' + file_name #make cmd line to compile java script
+        subprocess.run(compile_command_line)
+        file_name.replace('.java', '') #delete extension file name to run as class
+        run_command_line = f'java {file_name}' #make cmd line to run java script
+        args = shlex.split(run_command_line)
+        input_args = code.input.splitline() #split input str as line
+
+    else:
+        return {"output": "This language does not support."}
+
+    with subprocess.Popen(args, stdin=subprocess.PIPE,  stdout=subprocess.PIPE, stderr=subprocess.PIPE) as proc: #open shell & run code
+        output : list = [] #make list for stdout
+        for x in input_args:
+            output.append(proc.communicate(input=x)) #PIPE communicate
+        return {"output": output} #return stdout
 
 
 """
