@@ -42,7 +42,7 @@ def compile_code(code:Code):
         timestamp = int(time.clock_gettime(1)) # make Timestamp
         file_name = str(timestamp) + "_py" +'.py'
         with open(file=file_name, mode="w") as f:
-            f.write(code) # write code to file
+            f.write(code.code) # write code to file
         command_line = 'python3 ' + file_name #make cmd line to run python script
         args = shlex.split(command_line)
         input_args = code.input.splitline() #split input str as line
@@ -51,7 +51,7 @@ def compile_code(code:Code):
         timestamp = int(time.clock_gettime(1)) # make Timestamp
         file_name = str(timestamp) + "_java" +'.java'
         with open(file=file_name, mode="w") as f:
-            f.write(code) # write code to file
+            f.write(code.code) # write code to file
         compile_command_line = 'javac -encoding UTF-8 ' + file_name #make cmd line to compile java script
         subprocess.run(compile_command_line)
         file_name.replace('.java', '') #delete extension file name to run as class
