@@ -2,6 +2,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 
 import subprocess, shlex, time, json
+from pipe import pipe_run
 
 app = FastAPI()
 
@@ -45,28 +46,27 @@ def compile_code(code:Code):
             f.write(code.code) # write code to file
         command_line = 'python3 ' + file_name #make cmd line to run python script
         args = shlex.split(command_line)
-        input_args = code.input.splitline() #split input str as line
-
+        input_args = code.input.splitlines() #split input str as line
+        return pipe_run(args=args,input_args=input_args)
+        
     if code.lang == 'Java': #Java 코드 컴파일
         timestamp = int(time.clock_gettime(1)) # make Timestamp
-        file_name = str(timestamp) + "_java" +'.java'
+        file_name = 'Main.java'
         with open(file=file_name, mode="w") as f:
             f.write(code.code) # write code to file
         compile_command_line = 'javac -encoding UTF-8 ' + file_name #make cmd line to compile java script
-        subprocess.run(compile_command_line)
-        file_name.replace('.java', '') #delete extension file name to run as class
-        run_command_line = f'java {file_name}' #make cmd line to run java script
+        compile = shlex.split(compile_command_line)
+        subprocess.Popen(args=compile, shell=True)
+        run_command_line = 'java -Dfile.encoding=UTF-8 Main' #make cmd line to run java script
         args = shlex.split(run_command_line)
-        input_args = code.input.splitline() #split input str as line
+        input_args = code.input.splitlines() #split input str as line
+        return pipe_run(args=args,input_args=input_args)
+        
 
     else:
         return {"output": "This language does not support."}
 
-    with subprocess.Popen(args, stdin=subprocess.PIPE,  stdout=subprocess.PIPE, stderr=subprocess.PIPE) as proc: #open shell & run code
-        output : list = [] #make list for stdout
-        for x in input_args:
-            output.append(proc.communicate(input=x)) #PIPE communicate
-        return {"output": output} #return stdout
+    
 
 
 """
