@@ -36,4 +36,4 @@ Code-Runner supports many languages.
 
 ## Having Issue?
 
-If you need to help with Code-Runner or you would like to help out, you can contact me on 'Issue' tab.
+If you need to help with Code-Runner or you would like to help out, you can contact me on 'Issues' tab.
