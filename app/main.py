@@ -2,7 +2,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 
 import subprocess, shlex, time, json
-from pipe import pipe_run
+from app.pipe import pipe_run
 
 app = FastAPI()
 
@@ -51,21 +51,19 @@ def compile_code(code:Code):
         
     if code.lang == 'Java': #Java 코드 컴파일
         timestamp = int(time.clock_gettime(1)) # make Timestamp
-        file_name = 'Main.java'
-        with open(file=file_name, mode="w") as f:
+        with open(file="Main.java", mode="w") as f:
             f.write(code.code) # write code to file
-        compile_command_line = 'javac -encoding UTF-8 ' + file_name #make cmd line to compile java script
-        compile = shlex.split(compile_command_line)
-        subprocess.Popen(args=compile, shell=True)
-        run_command_line = 'java -Dfile.encoding=UTF-8 Main' #make cmd line to run java script
-        args = shlex.split(run_command_line)
+        compile_command = "javac Main.java" #make cmd line to compile java script
+        compile = shlex.split(compile_command)
+        subprocess.Popen(args=compile)
+        run_command= "java Main" #make cmd line to run java script
+        args = shlex.split(run_command)
         input_args = code.input.splitlines() #split input str as line
         return pipe_run(args=args,input_args=input_args)
         
 
     else:
-        return {"output": "This language does not support."}
-
+        return {"output": "", "error": "This language does not support."}
     
 
 
