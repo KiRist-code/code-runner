@@ -16,7 +16,7 @@ def pipe_run(args:list[str], input_args:list[str]):
         else:
             for x in input_args:
                 stdout, stderr = proc.communicate(input=bytes(x, 'utf-8'),timeout=5)#PIPE communicate
-                output = newline_split(stdout)
-                err = newline_split(stderr)
+                output.extend(newline_split(stdout))
+                err.extend(newline_split(stderr))
         return {"output": output, "error": err} #return stdout
     

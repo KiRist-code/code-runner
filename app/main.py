@@ -94,7 +94,8 @@ async def websocket_endpoint(websocket: WebSocket):
                 args = shlex.split(command_line)
                 time.sleep(1)
                 with subprocess.Popen(args, stdin=subprocess.PIPE,  stdout=subprocess.PIPE, stderr=subprocess.PIPE) as proc: #open shell & run code
-                    await manager.send_personal_message(proc.communicate(), websocket)
+                    stdout, stderr = proc.communicate()
+                    await manager.send_personal_message(stdout, websocket)
                 await manager.send_personal_message("done", websocket=websocket)
                 time.sleep(1)
     except WebSocketDisconnect:
