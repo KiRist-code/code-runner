@@ -1,15 +1,16 @@
+from typing import List
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 
 import subprocess, shlex, time, json
-from app.pipe import pipe_run
+from pipe import pipe_run
 
 app = FastAPI()
 
 class Code(BaseModel):
     lang: str
     code: str
-    input: str
+    input: List[str]
 
 class ConnectionManager:
     def __init__(self):
